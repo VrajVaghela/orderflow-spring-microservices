@@ -11,6 +11,8 @@ spring:
     url: ${INVENTORY_DB_URL:jdbc:postgresql://postgres:5432/inventory}
     username: ${POSTGRES_USER:orderflow}
     password: ${POSTGRES_PASSWORD:orderflow}
+    hikari:
+      connection-timeout: 5000
   jpa:
     open-in-view: false
     hibernate:

@@ -7,10 +7,16 @@ spring:
   threads:
     virtual:
       enabled: true
+  task:
+    scheduling:
+      shutdown:
+        await-termination: false
   datasource:
     url: ${PAYMENT_DB_URL:jdbc:postgresql://postgres:5432/payment}
     username: ${POSTGRES_USER:orderflow}
     password: ${POSTGRES_PASSWORD:orderflow}
+    hikari:
+      connection-timeout: 5000
   jpa:
     open-in-view: false
     hibernate:
