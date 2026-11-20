@@ -9,27 +9,29 @@ spring:
       enabled: true
   cloud:
     gateway:
-      routes:
-        - id: orders
-          uri: ${ORDER_SERVICE_URI:http://order-service:8081}
-          predicates:
-            - Path=/api/orders/**
-        - id: stock
-          uri: ${INVENTORY_SERVICE_URI:http://inventory-service:8082}
-          predicates:
-            - Path=/api/stock/**
-        - id: payments
-          uri: ${PAYMENT_SERVICE_URI:http://payment-service:8083}
-          predicates:
-            - Path=/api/payments/**
-        - id: graphql
-          uri: ${QUERY_SERVICE_URI:http://query-service:8084}
-          predicates:
-            - Path=/graphql
-        - id: graphiql
-          uri: ${QUERY_SERVICE_URI:http://query-service:8084}
-          predicates:
-            - Path=/graphiql/**
+      server:
+        webflux:
+          routes:
+            - id: orders
+              uri: ${ORDER_SERVICE_URI:http://order-service:8081}
+              predicates:
+                - Path=/api/orders/**
+            - id: stock
+              uri: ${INVENTORY_SERVICE_URI:http://inventory-service:8082}
+              predicates:
+                - Path=/api/stock/**
+            - id: payments
+              uri: ${PAYMENT_SERVICE_URI:http://payment-service:8083}
+              predicates:
+                - Path=/api/payments/**
+            - id: graphql
+              uri: ${QUERY_SERVICE_URI:http://query-service:8084}
+              predicates:
+                - Path=/graphql
+            - id: graphiql
+              uri: ${QUERY_SERVICE_URI:http://query-service:8084}
+              predicates:
+                - Path=/graphiql/**
 
 management:
   endpoints:

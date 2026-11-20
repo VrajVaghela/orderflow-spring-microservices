@@ -51,6 +51,6 @@ CREATE TABLE processed_events (
 CREATE TABLE idempotency_keys (
     key varchar(80) PRIMARY KEY,
     order_id uuid NOT NULL,
-    request_hash char(64) NOT NULL,
+    request_hash varchar(64) NOT NULL,
     created_at timestamptz NOT NULL
 );

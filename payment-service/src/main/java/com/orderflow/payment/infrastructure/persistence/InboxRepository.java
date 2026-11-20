@@ -6,10 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface InboxRepository extends JpaRepository<InboxEntity, UUID> {
 
     @Modifying
+    @Transactional
     @Query(value = """
             insert into processed_events (event_id, processed_at)
             values (:id, :processedAt)

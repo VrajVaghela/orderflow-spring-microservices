@@ -7,6 +7,7 @@ import io.github.resilience4j.retry.RetryRegistry;
 import io.github.resilience4j.timelimiter.TimeLimiter;
 import io.github.resilience4j.timelimiter.TimeLimiterRegistry;
 import jakarta.annotation.PreDestroy;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -28,6 +29,7 @@ public class ResilientExecutor {
     private final TimeLimiter timeLimiter;
     private final ExecutorService executor;
 
+    @Autowired
     public ResilientExecutor(
             CircuitBreakerRegistry circuitBreakers,
             RetryRegistry retries,
