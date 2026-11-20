@@ -26,3 +26,13 @@ FROM runtime AS payment-service
 COPY --from=build /src/payment-service/target/payment-service-exec.jar /app/app.jar
 EXPOSE 8083
 ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75.0", "-jar", "/app/app.jar"]
+
+FROM runtime AS query-service
+COPY --from=build /src/query-service/target/query-service-exec.jar /app/app.jar
+EXPOSE 8084
+ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75.0", "-jar", "/app/app.jar"]
+
+FROM runtime AS api-gateway
+COPY --from=build /src/api-gateway/target/api-gateway-exec.jar /app/app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75.0", "-jar", "/app/app.jar"]

@@ -24,6 +24,8 @@
         <module>inventory-service</module>
         <module>order-service</module>
         <module>payment-service</module>
+        <module>query-service</module>
+        <module>api-gateway</module>
     </modules>
 
     <properties>

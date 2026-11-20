@@ -1,0 +1,23 @@
+type OrderLineView {
+    sku: String!
+    quantity: Int!
+    unitPriceMinor: Int!
+}
+
+type OrderView {
+    id: ID!
+    customerId: String!
+    status: String!
+    currency: String!
+    totalMinor: Int!
+    paymentMethod: String!
+    reservationId: String
+    reason: String
+    version: Int!
+    lines: [OrderLineView!]!
+}
+
+type Query {
+    order(id: ID!): OrderView
+    ordersByCustomer(customerId: String!): [OrderView!]!
+}
