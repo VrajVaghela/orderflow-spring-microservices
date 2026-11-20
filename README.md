@@ -169,9 +169,42 @@ GitHub Actions runs the same command on Ubuntu with Java 21 (`.github/workflows/
 
 ## Load test
 
-`loadtest/orders.js` drives the gateway. Each iteration posts an order for `SKU-100` and then reads it back. The post includes the synchronous inventory reservation. It returns at `PAYMENT_PENDING`. It does not wait for payment or for the GraphQL projection, so the numbers are gateway-plus-order-plus-inventory latency, not full saga latency.
+`loadtest/orders.js` drives the gateway. Each iteration posts an order for `SKU-100` (quantity 1, card token `tok_visa_4242`) and then reads that order back. The post includes the synchronous inventory reservation and returns at `PAYMENT_PENDING`. It does not wait for payment or for the GraphQL projection. The numbers below are gateway, order-service, and inventory latency for those two HTTP calls, not end-to-end saga latency.
 
-The command, virtual users, duration, and the measured requests/sec, latency, and error rate are written in this section only after a run on a real machine. No results have been recorded yet.
+`http_req_duration` is per HTTP request, so it mixes `POST /api/orders` and `GET /api/orders/{id}`. `http_reqs` counts both. One iteration is one post plus one get.
+
+Measured with k6 v1.4.0 (`k6 v1.4.0 (commit/a9f9e3b28a, go1.25.4, linux/amd64)`) on 2026-11-20T16:41:35Z. The script options are 10 virtual users for 30s. k6 reported the run as `running (0m30.0s)` with `10` max VUs.
+
+```bash
+NO_COLOR=1 /tmp/k6 run \
+  --summary-trend-stats 'avg,min,med,max,p(50),p(90),p(95),p(99)' \
+  --summary-export /tmp/k6-summary.json \
+  /workspace/loadtest/orders.js
+```
+
+Values are copied from `/tmp/k6-summary.json` with no rounding. Durations are milliseconds.
+
+| Metric | Value |
+| --- | --- |
+| HTTP requests (`http_reqs.count`) | 9216 |
+| HTTP requests/sec (`http_reqs.rate`) | 307.05518613159313 |
+| Iterations (`iterations.count`) | 4608 |
+| Iterations/sec (`iterations.rate`) | 153.52759306579657 |
+| `http_req_duration` p(50) | 22.59393 |
+| `http_req_duration` p(95) | 90.63770475 |
+| `http_req_duration` p(99) | 142.50277830000024 |
+| `http_req_duration` avg | 32.424916920681255 |
+| `http_req_failed.value` | 0 |
+| Failed requests | 0 out of 9216 |
+| Checks | 9216 succeeded, 0 failed (`post accepted`, `get ok`) |
+
+Machine at the start of that run:
+
+- `nproc`: 4
+- `free -b` Mem total `16780623872`, used `10137370624`, free `279560192`, available `6643253248`, swap total `0`
+- `/proc/vmstat`: `balloon_inflate 2621440`, `balloon_deflate 1048576`
+
+`free` under-reports usable RAM while the hypervisor balloon holds pages. The counters above are the raw readings. Pages still inflated at that moment are `2621440 - 1048576 = 1572864` pages. At 4096 bytes per page that is `6442450944` bytes.
 
 ## Limits worth saying out loud
 
