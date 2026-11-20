@@ -21,3 +21,8 @@ FROM runtime AS order-service
 COPY --from=build /src/order-service/target/order-service-exec.jar /app/app.jar
 EXPOSE 8081
 ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75.0", "-jar", "/app/app.jar"]
+
+FROM runtime AS payment-service
+COPY --from=build /src/payment-service/target/payment-service-exec.jar /app/app.jar
+EXPOSE 8083
+ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75.0", "-jar", "/app/app.jar"]
