@@ -1,0 +1,11 @@
+package com.orderflow.common;
+
+public enum EventType {
+    ORDER_PLACED,
+    ORDER_PAYMENT_REQUESTED,
+    ORDER_CONFIRMED,
+    ORDER_CANCELLED,
+    ORDER_REJECTED,
+    PAYMENT_AUTHORIZED,
+    PAYMENT_DECLINED
+}

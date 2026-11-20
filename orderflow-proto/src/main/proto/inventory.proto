@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package orderflow.inventory.v1;
+
+option java_multiple_files = true;
+option java_package = "com.orderflow.inventory.v1";
+option java_outer_classname = "InventoryProto";
+
+// Stock reservation used by the order saga.
+// ReserveStock is idempotent on order_id. ReleaseStock is idempotent.
+service Inventory {
+  rpc ReserveStock(ReserveStockRequest) returns (ReserveStockResponse);
+  rpc ReleaseStock(ReleaseStockRequest) returns (ReleaseStockResponse);
+}
+
+message StockLine {
+  string sku = 1;
+  int32 quantity = 2;
+}
+
+message ReserveStockRequest {
+  string order_id = 1;
+  repeated StockLine lines = 2;
+}
+
+message ReserveStockResponse {
+  string reservation_id = 1;
+}
+
+message ReleaseStockRequest {
+  string order_id = 1;
+}
+
+message ReleaseStockResponse {
+  bool released = 1;
+}

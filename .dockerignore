@@ -1,0 +1,7 @@
+.git
+**/target
+.idea
+.github
+loadtest
+*.md
+.env
