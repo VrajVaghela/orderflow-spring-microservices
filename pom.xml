@@ -21,6 +21,7 @@
     <modules>
         <module>orderflow-common</module>
         <module>orderflow-proto</module>
+        <module>inventory-service</module>
     </modules>
 
     <properties>
