@@ -16,3 +16,8 @@ FROM runtime AS inventory-service
 COPY --from=build /src/inventory-service/target/inventory-service-exec.jar /app/app.jar
 EXPOSE 8082 9090
 ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75.0", "-jar", "/app/app.jar"]
+
+FROM runtime AS order-service
+COPY --from=build /src/order-service/target/order-service-exec.jar /app/app.jar
+EXPOSE 8081
+ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75.0", "-jar", "/app/app.jar"]

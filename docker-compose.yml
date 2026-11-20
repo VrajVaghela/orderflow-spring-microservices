@@ -63,6 +63,34 @@ services:
     volumes:
       - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
 
+  order-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: order-service
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-orderflow}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-orderflow}
+      ORDER_DB_URL: jdbc:postgresql://postgres:5432/orders
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      INVENTORY_HOST: inventory-service
+      INVENTORY_GRPC_PORT: 9090
+    ports:
+      - "${ORDER_PORT:-8081}:8081"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      inventory-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8081/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 40s
+
   inventory-service:
     build:
       context: .
