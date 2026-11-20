@@ -1,5 +1,4 @@
-# Infrastructure only until the service images are added.
-# `docker compose up` brings up Postgres, MongoDB, Kafka and Prometheus.
+# One command starts Postgres, MongoDB, Kafka, Prometheus, and every service.
 
 services:
   postgres:
